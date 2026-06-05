@@ -1,133 +1,147 @@
 import { Injectable } from "@angular/core";
 import { Pokemon } from "./donnees/pokemon";
-import { POKEMONS } from "./donnees/mock-pokemons";
+import { catchError, Observable, of, from, map } from "rxjs";
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { environment } from "../../environnements/environnement";
 
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { catchError, tap, Observable, of, map } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PokemonsService {
 
-  constructor(private http: HttpClient){}
+  private supabase: SupabaseClient;
 
-  private pokemonUrl = 'api/pokemons';
+  constructor() {
+    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
+  }
 
-  //Permet de regarder le flux de donnée en continu
-  private log(log: string){
+  private log(log: string) {
     console.info(log);
   }
 
-  // permet de gérer proprement les erreurs des appels http sans faire planter l'application
-  private handleError<T>(operation='operation', result?: T){
-    return(error: any): Observable<T> => {
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
       console.log(error);
       console.log(`${operation} failed: ${error.message}`);
-
       return of(result as T);
     };
   }
 
-  //Permet de récupérer tout les pokémons
-  getPokemons(): Observable<Pokemon[]>{
-    return this.http.get<Pokemon[]>(this.pokemonUrl).pipe(
-      tap(_ => this.log(`fetched pokemons`)),
-      catchError(this.handleError(`getPokemons`, []))
+  getPokemons(): Observable<Pokemon[]> {
+    return from(
+      this.supabase.from('pokemons').select('*').order('id')
+    ).pipe(
+      map(({ data, error }) => {
+        if (error) throw error;
+        this.log('fetched pokemons');
+        return data as Pokemon[];
+      }),
+      catchError(this.handleError('getPokemons', []))
     );
   }
 
   getPokemonsFavoris(): Observable<Pokemon[]> {
-    const url = `${this.pokemonUrl}?isFavorite=true`;
-
-    return this.http.get<Pokemon[]>(url).pipe(
-      tap(_ => this.log(`fetched pokemon isFavorite=true`)),
-      catchError(this.handleError<Pokemon[]>(`getPokemonsFavoris`))
+    return from(
+      this.supabase.from('pokemons').select('*').eq('isFavorite', true)
+    ).pipe(
+      map(({ data, error }) => {
+        if (error) throw error;
+        this.log('fetched pokemon isFavorite=true');
+        return data as Pokemon[];
+      }),
+      catchError(this.handleError<Pokemon[]>('getPokemonsFavoris', []))
     );
   }
 
-  //Permet de récupérer un pokémon
-  getPokemon(id: number): Observable<Pokemon>{
-    const url = `${this.pokemonUrl}/${id}`;
-
-    return this.http.get<Pokemon>(url).pipe(
-      tap(_ => this.log(`fetched pokemon id=${id}`)),
+  getPokemon(id: number): Observable<Pokemon> {
+    return from(
+      this.supabase.from('pokemons').select('*').eq('id', id).single()
+    ).pipe(
+      map(({ data, error }) => {
+        if (error) throw error;
+        this.log(`fetched pokemon id=${id}`);
+        return data as Pokemon;
+      }),
       catchError(this.handleError<Pokemon>(`getPokemon id=${id}`))
     );
   }
 
-  getPokemonTypes(): string[]{
+  getPokemonTypes(): string[] {
     return ['Plante', 'Feu', 'Eau', 'Poison', 'Psy', 'Electrik', 'Normal', 'Fée', 'Vol', 'Insecte'];
   }
 
-  updatePokemon(pokemon: Pokemon): Observable<Pokemon>{
-
-    const httpOptions = {
-      headers: new HttpHeaders({'content-type': 'application/json'})
-    }
-    const url = `${this.pokemonUrl}/${pokemon.id}`;
-
-    return this.http.put<Pokemon>(url, pokemon, httpOptions).pipe(
-      tap(_ => this.log(`update pokemon id=${pokemon.id}`)),
+  updatePokemon(pokemon: Pokemon): Observable<Pokemon> {
+    return from(
+      this.supabase.from('pokemons').update(pokemon).eq('id', pokemon.id).select().single()
+    ).pipe(
+      map(({ data, error }) => {
+        if (error) throw error;
+        this.log(`update pokemon id=${pokemon.id}`);
+        return data as Pokemon;
+      }),
       catchError(this.handleError<Pokemon>(`updatePokemon id=${pokemon.id}`))
-    )
-
+    );
   }
 
-  addPokemon(pokemon: Pokemon): Observable<Pokemon>{
-
-    const httpOptions = {
-      headers: new HttpHeaders({'content-type': 'application/json'})
-    }
-    const url = `${this.pokemonUrl}`;
-
-    return this.http.post<Pokemon>(url, pokemon, httpOptions).pipe(
-      tap(_ => this.log(`add pokemon`)),
-      catchError(this.handleError<Pokemon>(`addPokemon`))
-    )
-
+  addPokemon(pokemon: Pokemon): Observable<Pokemon> {
+    pokemon.created = new Date();
+    const { id, ...pokemonSansId } = pokemon;
+    return from(
+      this.supabase.from('pokemons').insert(pokemonSansId).select().single()
+    ).pipe(
+      map(({ data, error }) => {
+        if (error) throw error;
+        this.log('add pokemon');
+        return data as Pokemon;
+      }),
+      catchError(this.handleError<Pokemon>('addPokemon'))
+    );
   }
 
-  deletePokemon(pokemon: Pokemon): Observable<Pokemon>{
-    const httpOptions = {
-      headers: new HttpHeaders({'content-type': 'application/json'})
-    }
-    const url = `${this.pokemonUrl}/${pokemon.id}`;
-
-    return this.http.delete<Pokemon>(url, httpOptions).pipe(
-      tap(_ => this.log(`delete pokemon id=${pokemon.id}`)),
-      catchError(this.handleError<Pokemon>(`deletePokemon id=${pokemon.id}`))
-    )
-
+  deletePokemon(pokemon: Pokemon): Observable<any> {
+    return from(
+      this.supabase.from('pokemons').delete().eq('id', pokemon.id)
+    ).pipe(
+      map(({ error }) => {
+        if (error) throw error;
+        this.log(`delete pokemon id=${pokemon.id}`);
+      }),
+      catchError(this.handleError(`deletePokemon id=${pokemon.id}`))
+    );
   }
 
-  searchPokemons(term: string, param: string = "name"): Observable<Pokemon[]> {
+  searchPokemons(term: string, param: string = 'name'): Observable<Pokemon[]> {
     if (!term.trim()) return of([]);
 
-    return this.http.get<Pokemon[]>(this.pokemonUrl).pipe(
-      map((pokemons: any[]) => pokemons.filter(p => {
-        const value = (p as any)[param];
-        if (typeof value === 'string') {
-          return value.toLowerCase() === term.toLowerCase();
-        }
-        if (Array.isArray(value)) {
-          return value.some(v => v.toLowerCase().includes(term.toLowerCase()));
-        }
-        return false;
-      })),
+    let query;
+
+    if (param === 'types') {
+      query = this.supabase.from('pokemons').select('*').or(`types.cs.{"${term}"},types.cs.{"${term.charAt(0).toUpperCase() + term.slice(1).toLowerCase()}"}`)
+    }
+    else if (param === 'rarete') {
+      query = this.supabase.from('pokemons').select('*').eq('rarete', term);
+    }
+    else {
+      query = this.supabase.from('pokemons').select('*').ilike(param, `%${term}%`);
+    }
+
+    return from(query).pipe(
+      map(({ data, error }) => {
+        if (error) throw error;
+        return data as Pokemon[];
+      }),
       catchError(this.handleError<Pokemon[]>('searchPokemons', []))
     );
   }
 
-  addPokemonToFavoris(pokemon: Pokemon) {
+  addPokemonToFavoris(pokemon: Pokemon): Observable<Pokemon> {
     pokemon.isFavorite = true;
     return this.updatePokemon(pokemon);
   }
 
-  removePokemonToFavoris(pokemon: Pokemon) {
+  removePokemonToFavoris(pokemon: Pokemon): Observable<Pokemon> {
     pokemon.isFavorite = false;
     return this.updatePokemon(pokemon);
   }
-
-
 }

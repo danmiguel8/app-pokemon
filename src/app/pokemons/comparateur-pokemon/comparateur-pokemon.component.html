@@ -7,7 +7,7 @@
         <select [(ngModel)]="pokemon1" style="display:block; width:100%; height:36px; border:1px solid #ccc; border-radius:4px; padding:0 8px; background:white; color:#333;">
           <option [ngValue]="null" disabled>-- Choisir --</option>
           @for (p of pokemons; track p.id) {
-            <option [ngValue]="p">{{ p.name }}</option>
+            <option [ngValue]="p" [disabled]="pokemon2 == p">{{ p.name }}</option>
           }
         </select>
       </div>
@@ -21,7 +21,7 @@
         <select [(ngModel)]="pokemon2" style="display:block; width:100%; height:36px; border:1px solid #ccc; border-radius:4px; padding:0 8px; background:white; color:#333;">
           <option [ngValue]="null" disabled>-- Choisir --</option>
           @for (p of pokemons; track p.id) {
-            <option [ngValue]="p">{{ p.name }}</option>
+            <option [ngValue]="p" [disabled]="pokemon1 == p" >{{ p.name }}</option>
           }
         </select>
       </div>

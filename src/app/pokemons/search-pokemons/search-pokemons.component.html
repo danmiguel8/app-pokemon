@@ -26,7 +26,7 @@
           <span class="title" style="font-weight:500">{{ pokemon.name }}</span>
           <p class="grey-text">
             HP: {{ pokemon.hp }} &nbsp; CP: {{ pokemon.cp }}
-            <span class="new {{ pokemon.types[0] | pokemonTypeColor }} badge blue" data-badge-caption="">{{ pokemon.types[0] }}</span>
+            <span class="new {{ pokemon.types[0] | pokemonTypeColor }} badge black-text" style="font-weight:500" data-badge-caption="">{{ pokemon.types[0] }}</span>
           </p>
           <span style="position:absolute; right:16px; top:50%; transform:translateY(-50%); color:#BA7517">
             {{ pokemon.rarete }}
