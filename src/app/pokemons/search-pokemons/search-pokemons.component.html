@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col s12">
+
+    <h5>Pokédex</h5>
+    <p class="grey-text">Recherchez par nom, type ou rareté</p>
+
+    <div class="row">
+      <div class="input-field col s4">
+        <i class="material-icons prefix">search</i>
+        <input id="search-name" type="search" placeholder="Nom" (keyup)="search($event.target.value)" />
+      </div>
+      <div class="input-field col s4">
+        <i class="material-icons prefix">label</i>
+        <input id="search-type" type="search" placeholder="Type" (keyup)="search($event.target.value, 'types')" />
+      </div>
+      <div class="input-field col s4">
+        <i class="material-icons prefix">star</i>
+        <input id="search-rarete" type="search" placeholder="Rareté => (*)" (keyup)="search($event.target.value, 'rarete')" />
+      </div>
+    </div>
+
+    <div class="collection">
+      @for (pokemon of pokemons | async; track pokemon.id) {
+        <a (click)="gotToDetail(pokemon)" class="collection-item avatar">
+          <img [src]="pokemon.picture" class="circle" style="width:40px; height:40px; object-fit:contain;" />
+          <span class="title" style="font-weight:500">{{ pokemon.name }}</span>
+          <p class="grey-text">
+            HP: {{ pokemon.hp }} &nbsp; CP: {{ pokemon.cp }}
+            <span class="new {{ pokemon.types[0] | pokemonTypeColor }} badge blue" data-badge-caption="">{{ pokemon.types[0] }}</span>
+          </p>
+          <span style="position:absolute; right:16px; top:50%; transform:translateY(-50%); color:#BA7517">
+            {{ pokemon.rarete }}
+          </span>
+        </a>
+      }
+    </div>
+
+  </div>
+</div>

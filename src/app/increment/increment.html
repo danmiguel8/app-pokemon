@@ -1,0 +1,12 @@
+
+<div class="container center">
+  <h1>Incrémentation</h1>
+  <p>Utilisez les boutons pour incrémenter le compteur.</p>
+  <button (click)="counter = counter + 10"  style="margin:2%">Incrémenter de 10</button>
+  <div class="counter">
+    <button (click)="counter = counter - 1">Décrémenter -</button>
+    <span style="margin: 3%;">{{ counter }}</span>
+    <button (click)="counter = counter + 1">Incrémenter +</button>
+  </div>
+  <button (click)="counter = 0 "  style="margin:2%">Remetre à 0</button>
+</div>
