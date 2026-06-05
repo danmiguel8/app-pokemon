@@ -101,23 +101,23 @@ export class PokemonsService {
 
   }
 
-searchPokemons(term: string, param: string = "name"): Observable<Pokemon[]> {
-  if (!term.trim()) return of([]);
+  searchPokemons(term: string, param: string = "name"): Observable<Pokemon[]> {
+    if (!term.trim()) return of([]);
 
-  return this.http.get<Pokemon[]>(this.pokemonUrl).pipe(
-    map((pokemons: any[]) => pokemons.filter(p => {
-      const value = (p as any)[param];
-      if (typeof value === 'string') {
-        return value.toLowerCase() === term.toLowerCase();
-      }
-      if (Array.isArray(value)) {
-        return value.some(v => v.toLowerCase().includes(term.toLowerCase()));
-      }
-      return false;
-    })),
-    catchError(this.handleError<Pokemon[]>('searchPokemons', []))
-  );
-}
+    return this.http.get<Pokemon[]>(this.pokemonUrl).pipe(
+      map((pokemons: any[]) => pokemons.filter(p => {
+        const value = (p as any)[param];
+        if (typeof value === 'string') {
+          return value.toLowerCase() === term.toLowerCase();
+        }
+        if (Array.isArray(value)) {
+          return value.some(v => v.toLowerCase().includes(term.toLowerCase()));
+        }
+        return false;
+      })),
+      catchError(this.handleError<Pokemon[]>('searchPokemons', []))
+    );
+  }
 
   addPokemonToFavoris(pokemon: Pokemon) {
     pokemon.isFavorite = true;

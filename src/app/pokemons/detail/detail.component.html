@@ -46,7 +46,6 @@
 
         <div class="card-action" style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
 
-          <!-- Navigation -->
           <div style="display:flex; gap:8px;">
             @if(pokemon.id > 1){
               <a href="/pokemon/{{pokemon.id-1}}" class="btn waves-effect waves-light white black-text">
@@ -60,7 +59,6 @@
             }
           </div>
 
-          <!-- Actions -->
           <div style="display:flex; gap:8px;">
             <a (click)="goBack()" class="btn waves-effect waves-light grey">
               <i class="material-icons left">arrow_back</i> Retour

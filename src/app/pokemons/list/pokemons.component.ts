@@ -7,12 +7,13 @@ import { BorderCardDirective } from '../directives/border-card.directive';
 import { Router } from '@angular/router';
 import { PokemonsService } from '../pokemons.service';
 import { SearchPokemonsComponent } from "../search-pokemons/search-pokemons.component";
+import { PokemonComparateurComponent } from "../comparateur-pokemon/comparateur-pokemon.component";
 
 @Component({
   standalone: true,
   selector: 'list-pokemons',
   templateUrl: './pokemons.component.html',
-  imports: [DatePipe, PokemonTypeColorPipe, BorderCardDirective, SearchPokemonsComponent]
+  imports: [DatePipe, PokemonTypeColorPipe, BorderCardDirective, SearchPokemonsComponent, PokemonComparateurComponent]
 })
 export class PokemonsComponent implements OnInit {
 

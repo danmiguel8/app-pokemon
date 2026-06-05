@@ -52,6 +52,10 @@ export class FavorisPokemonComponent implements OnInit {
     );
   }
 
+  goBack(){
+    this.router.navigate(['/']);
+  }
+
 
 }
 
