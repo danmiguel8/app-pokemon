@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { NavComponent } from "../nav.component";
 
 @Component({
   selector: 'app-increment',
-  imports: [],
+  imports: [NavComponent],
   templateUrl: './increment.html',
   styleUrl: './increment.css',
 })

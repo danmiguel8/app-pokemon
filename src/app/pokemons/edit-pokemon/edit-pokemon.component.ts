@@ -5,12 +5,13 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { DatePipe } from "@angular/common";
 import { FormPokemonComponent } from "./form-pokemon.component";
 import { PokemonsService } from "../pokemons.service";
+import { NavComponent } from "../../nav.component";
 
 @Component({
   standalone: true,
   selector: 'edit-Pokemon',
   templateUrl: 'edit-pokemon.component.html',
-  imports: [FormPokemonComponent]
+  imports: [FormPokemonComponent, NavComponent]
 })
 export class EditPokemonComponent implements OnInit{
 

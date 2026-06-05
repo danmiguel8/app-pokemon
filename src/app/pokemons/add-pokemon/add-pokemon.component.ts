@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormAddPokemonComponent } from './form-add-pokemon.component';
 import { Router } from '@angular/router';
+import { NavComponent } from "../../nav.component";
 
 @Component({
   selector: 'app-add-pokemon',
   templateUrl: './add-pokemon.component.html',
-  imports: [FormAddPokemonComponent]
+  imports: [FormAddPokemonComponent, NavComponent]
 })
 export class AddPokemonComponent implements OnInit {
 

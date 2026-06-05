@@ -1,0 +1,107 @@
+<div class="row" style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f5f5f5;">
+  <div style="width:20%; padding:1rem;">
+    <div class="card z-depth-2" style="border-radius:8px;overflow:hidden;">
+
+      <div style="background:#008080;padding:2rem 2rem 1.5rem;">
+        <h5 style="color:#fff;margin:0 0 4px;font-weight:500">Pokédex</h5>
+        <p style="color:rgba(255,255,255,0.7);margin:0;font-size:13px">Portail des chasseurs de Pokémon</p>
+      </div>
+
+      <div class="card-content">
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;background:#e3f2fd;border-radius:6px;padding:4px;margin-bottom:1.5rem">
+          <button type="button"
+            (click)="switchTab('register')"
+            [style.background]="activeTab==='register' ? '#008080' : 'transparent'"
+            [style.color]="activeTab==='register' ? '#fff' : '#008080'"
+            style="border:none;border-radius:4px;padding:10px;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;font-family:inherit">
+            <i class="material-icons" style="font-size:16px;vertical-align:-3px;margin-right:4px">person_add</i>
+            Inscription
+          </button>
+          <button type="button"
+            (click)="switchTab('login')"
+            [style.background]="activeTab==='login' ? '#008080' : 'transparent'"
+            [style.color]="activeTab==='login' ? '#fff' : '#008080'"
+            style="border:none;border-radius:4px;padding:10px;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;font-family:inherit">
+            <i class="material-icons" style="font-size:16px;vertical-align:-3px;margin-right:4px">login</i>
+            Connexion
+          </button>
+        </div>
+
+        @if (errorMessage) {
+          <div style="background:#FFEBEE;border-radius:4px;padding:10px 14px;font-size:13px;color:#c62828;margin:1rem 0">
+            {{ errorMessage }}
+          </div>
+        }
+
+        @if (activeTab === 'register') {
+          <form [formGroup]="registerForm" (ngSubmit)="onRegister()" style="padding-top:1rem">
+            <div class="input-field">
+              <i class="material-icons prefix">person</i>
+              <input id="nom" type="text" placeholder="Nom" formControlName="nom" />
+
+              @if (registerForm.get('nom')?.invalid && registerForm.get('nom')?.touched) {
+                <span class="helper-text red-text">Nom requis</span>
+              }
+            </div>
+            <div class="input-field">
+              <i class="material-icons prefix">person_outline</i>
+              <input id="prenom" type="text" placeholder="Prénom" formControlName="prenom" />
+              @if (registerForm.get('prenom')?.invalid && registerForm.get('prenom')?.touched) {
+                <span class="helper-text red-text">Prénom requis</span>
+              }
+            </div>
+            <div class="input-field">
+              <i class="material-icons prefix">email</i>
+              <input id="reg-email" type="email" placeholder="Adresse email" formControlName="email" />
+              @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+                <span class="helper-text red-text">Email invalide</span>
+              }
+            </div>
+            <div class="input-field">
+              <i class="material-icons prefix">lock</i>
+              <input id="reg-password" type="password" placeholder="Mot de passe (6 car. min)" formControlName="password" />
+              @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+                <span class="helper-text red-text">6 caractères minimum</span>
+              }
+            </div>
+            <div class="input-field">
+              <i class="material-icons prefix">lock_outline</i>
+              <input id="confirmPassword" type="password" placeholder="Confirmer le mot de passe" formControlName="confirmPassword" />
+              @if (registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched) {
+                <span class="helper-text red-text">Les mots de passe ne correspondent pas</span>
+              }
+            </div>
+            <button type="submit" class="btn waves-effect waves-light teal darken-3"
+              style="width:100%;margin-top:0.5rem" [disabled]="registerForm.invalid || loading">
+              <i class="material-icons left">person_add</i>
+              {{ loading ? 'Création...' : 'Créer mon compte' }}
+            </button>
+          </form>
+        }
+
+        @if (activeTab === 'login') {
+          <form [formGroup]="loginForm" (ngSubmit)="onLogin()" style="padding-top:1rem">
+            <div class="input-field">
+              <i class="material-icons prefix">email</i>
+              <input id="login-email" type="email" placeholder="Adresse email" formControlName="email" />
+              @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+                <span class="helper-text red-text">Email invalide</span>
+              }
+            </div>
+            <div class="input-field">
+              <i class="material-icons prefix">lock</i>
+              <input id="login-password" type="password" placeholder="Mot de passe" formControlName="password" />
+            </div>
+            <button type="submit" class="btn waves-effect waves-light teal darken-3"
+              style="width:100%;margin-top:0.5rem" [disabled]="loginForm.invalid || loading">
+              <i class="material-icons left">login</i>
+              {{ loading ? 'Connexion...' : 'Se connecter' }}
+            </button>
+          </form>
+        }
+
+      </div>
+    </div>
+  </div>
+</div>

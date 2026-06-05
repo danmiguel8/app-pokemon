@@ -6,13 +6,14 @@ import { BorderCardDirective } from '../directives/border-card.directive';
 import { Router } from '@angular/router';
 import { PokemonsService } from '../pokemons.service';
 import { SearchPokemonsComponent } from "../search-pokemons/search-pokemons.component";
+import { NavComponent } from "../../nav.component";
 
 
 @Component({
   standalone: true,
   selector: 'app-favoris-pokemon',
   templateUrl: './favoris-pokemon.component.html',
-  imports: [DatePipe, PokemonTypeColorPipe, BorderCardDirective, SearchPokemonsComponent]
+  imports: [DatePipe, PokemonTypeColorPipe, BorderCardDirective, SearchPokemonsComponent, NavComponent]
 })
 
 export class FavorisPokemonComponent implements OnInit {

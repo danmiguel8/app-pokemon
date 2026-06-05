@@ -8,12 +8,15 @@ import { Router } from '@angular/router';
 import { PokemonsService } from '../pokemons.service';
 import { SearchPokemonsComponent } from "../search-pokemons/search-pokemons.component";
 import { PokemonComparateurComponent } from "../comparateur-pokemon/comparateur-pokemon.component";
+import { NavComponent } from "../../nav.component";
+import { AuthService } from '../../auth.service';
+import { LogoutComponent } from "../../logout/logout.component";
 
 @Component({
   standalone: true,
   selector: 'list-pokemons',
   templateUrl: './pokemons.component.html',
-  imports: [DatePipe, PokemonTypeColorPipe, BorderCardDirective, SearchPokemonsComponent, PokemonComparateurComponent]
+  imports: [DatePipe, PokemonTypeColorPipe, BorderCardDirective, SearchPokemonsComponent, PokemonComparateurComponent, NavComponent, LogoutComponent]
 })
 export class PokemonsComponent implements OnInit {
 
@@ -45,7 +48,7 @@ export class PokemonsComponent implements OnInit {
 
   pokemons: Pokemon[];
 
-  constructor(private router: Router, private pokemonsService: PokemonsService) { this.pokemons = []; }
+  constructor(private router: Router, private pokemonsService: PokemonsService, private authService: AuthService) { this.pokemons = []; }
 
   ngOnInit(): void {
     this.pokemonsService.getPokemons().subscribe((pokemons) => {

@@ -1,3 +1,4 @@
+<app-nav></app-nav>
 <h1 class="center">Liste de pokémons</h1>
 
 <div class="container">
@@ -5,6 +6,8 @@
   <div class="right section">
     <button (click)="navigateTocreatePokemon()" class="btn waves-effect waves-light">Ajouter un pokémon</button>
     <button (click)="favoris()" style="margin-left: 3px;" class="btn orange waves-effect waves-light">Favoris</button>
+    
+    <app-logout-component></app-logout-component>
   </div>
 
   <app-search-pokemons></app-search-pokemons>

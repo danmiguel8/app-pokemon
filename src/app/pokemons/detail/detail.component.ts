@@ -6,12 +6,13 @@ import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PokemonsService } from '../pokemons.service';
 import { PokemonRaretePipe } from '../pipes/pokemon-rarete.pipe';
+import { NavComponent } from "../../nav.component";
 
 @Component({
   standalone: true,
   selector: 'app-detail',
   templateUrl: './detail.component.html',
-  imports : [DatePipe,PokemonTypeColorPipe, PokemonRaretePipe]
+  imports: [DatePipe, PokemonTypeColorPipe, PokemonRaretePipe, NavComponent]
 })
 export class DetailComponent implements OnInit {
 

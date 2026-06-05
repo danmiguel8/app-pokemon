@@ -4,6 +4,7 @@ import { EditPokemonComponent } from "./edit-pokemon/edit-pokemon.component";
 import { DetailComponent } from "./detail/detail.component";
 import { AddPokemonComponent } from "./add-pokemon/add-pokemon.component";
 import { FavorisPokemonComponent } from "./favoris-pokemon/favoris-pokemon.component";
+import { PageNotFoundComponent } from "../page-not-found-component/page-not-found-component";
 
 export const pokemonsRoutes: Routes = [
   { path: 'all', loadComponent:() => PokemonsComponent },
@@ -11,4 +12,6 @@ export const pokemonsRoutes: Routes = [
   { path: 'favoris', loadComponent:() => FavorisPokemonComponent },
   { path: 'edit/:id', loadComponent:() => EditPokemonComponent },
   { path: ':id', loadComponent:() => DetailComponent },
+
+   {path: '**', loadComponent:() => PageNotFoundComponent},
 ]
