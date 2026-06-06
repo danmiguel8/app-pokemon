@@ -45,6 +45,7 @@ export const EVOLUTION_CHAINS: EvolutionChain[] = [
   { names: ['Excelangue', 'Exeggutor'] },
   { names: ['Abo', 'Arbok'] },
   { names: ['Mélofée', 'Mélodelfe'] },
+  { names: ['Piafabec', 'Rapasdepic'] },
 ];
 
 export function getEvolutionChain(pokemonName: string): string[] | null {
