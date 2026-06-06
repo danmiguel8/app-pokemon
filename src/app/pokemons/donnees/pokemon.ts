@@ -1,4 +1,4 @@
-export class Pokemon{
+export class Pokemon {
   id: number;
   hp: number;
   cp: number;
@@ -6,10 +6,12 @@ export class Pokemon{
   picture: string;
   types: Array<string>;
   created: Date;
-  rarete : string;
+  rarete: string;
   isFavorite: boolean;
+  level: number;
+  xp: number;
 
-  constructor(){
+  constructor() {
     this.id = 0;
     this.hp = 0;
     this.cp = 0;
@@ -19,6 +21,7 @@ export class Pokemon{
     this.created = new Date();
     this.rarete = '*';
     this.isFavorite = false;
+    this.level = 1;
+    this.xp = 0;
   }
-
 }

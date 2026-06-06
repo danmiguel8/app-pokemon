@@ -3,6 +3,7 @@ import { Pokemon } from "./donnees/pokemon";
 import { catchError, Observable, of, from, map } from "rxjs";
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from "../../environnements/environnement";
+import { getNextEvolution } from "./donnees/evolutions.config";
 
 
 @Injectable({
@@ -144,4 +145,62 @@ export class PokemonsService {
     pokemon.isFavorite = false;
     return this.updatePokemon(pokemon);
   }
+
+  getXpRequired(level: number): number {
+  return level * 100;
+}
+
+trainPokemon(pokemon: Pokemon): Observable<Pokemon> {
+  let { xp, level, hp, cp } = pokemon;
+  xp += 50;
+
+  if (xp >= this.getXpRequired(level)) {
+    xp = xp - this.getXpRequired(level);
+    level += 1;
+    hp += 10;
+    cp += 5;
+  }
+
+  const updated = { ...pokemon, xp, level, hp, cp };
+
+  return from(
+    this.supabase
+      .from('pokemons')
+      .update({ xp, level, hp, cp })
+      .eq('id', pokemon.id)
+      .select()
+      .single()
+  ).pipe(
+    map(({ data, error }) => {
+      if (error) throw new Error(error.message);
+      return data as Pokemon;
+    })
+  );
+}
+
+evolvePokemon(pokemon: Pokemon, allPokemons: Pokemon[]): Observable<Pokemon> | null {
+  const nextName = getNextEvolution(pokemon.name);
+  if (!nextName) return null;
+
+  const urlParts = pokemon.picture.split('/');
+  const fileName = urlParts[urlParts.length - 1];
+  const currentNum = parseInt(fileName.split('.')[0], 10);
+  const nextNum = currentNum + 1; // 2
+  urlParts[urlParts.length - 1] = `${nextNum}.webp`;
+  const nextPicture = urlParts.join('/');
+
+  return from(
+    this.supabase
+      .from('pokemons')
+      .update({ name: nextName, picture: nextPicture })
+      .eq('id', pokemon.id)
+      .select()
+      .single()
+  ).pipe(
+    map(({ data, error }) => {
+      if (error) throw new Error(error.message);
+      return data as Pokemon;
+    })
+  );
+}
 }

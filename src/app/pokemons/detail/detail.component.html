@@ -2,66 +2,98 @@
 
 <div class="row">
   <div class="col s12 m8 offset-m2">
-    <h2 class="header center">{{ pokemon?.name }}</h2>
+
+    <h2 class="header center">{{ pokemon.name }}</h2>
 
     <div class="card horizontal hoverable">
-
       <div class="card-image">
-        <img [src]="pokemon?.picture">
+        <img [src]="pokemon.picture" [alt]="pokemon.name">
       </div>
-
+      
       <div class="card-stacked">
         <div class="card-content">
+
+          <div style="margin-bottom:1rem;padding:12px;background:#e8f5e9;border-radius:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span style="font-weight:500;color:#2e7d32">Niveau {{ pokemon.level }}</span>
+              <span style="font-size:12px;color:#558b2f">{{ pokemon.xp }} / {{ xpRequired }} XP</span>
+            </div>
+            <div style="background:#c8e6c9;border-radius:20px;height:10px;overflow:hidden;">
+              <div style="height:100%;border-radius:20px;background:#43a047;transition:width 0.5s ease-out;"
+                [style.width.%]="xpPercent">
+              </div>
+            </div>
+            @if (levelUpMessage) {
+              <p style="color:#1b5e20;font-weight:500;margin:6px 0 0;font-size:13px;text-align:center;">
+                ★ {{ levelUpMessage }}
+              </p>
+            }
+          </div>
+
+          @if (evolutionChain.length > 0) {
+            <div style="margin-bottom:1rem;padding:10px;background:#e3f2fd;border-radius:8px;">
+              <p style="margin:0 0 8px;font-size:12px;color:#1565c0;font-weight:500">Chaîne d'évolution</p>
+              <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                @for (name of evolutionChain; track $index) {
+                  <span
+                    [style.fontWeight]="name === pokemon.name ? '700' : '400'"
+                    [style.color]="name === pokemon.name ? '#0d47a1' : '#64b5f6'"
+                    [style.fontSize]="name === pokemon.name ? '15px' : '13px'">
+                    {{ name }}
+                  </span>
+                  @if ($index < evolutionChain.length - 1) {
+                    <i class="material-icons" style="font-size:16px;color:#90caf9">arrow_forward</i>
+                  }
+                }
+              </div>
+            </div>
+          }
+
           <table class="bordered striped">
             <tbody>
-              <tr>
-                <td>Nom</td>
-                <td><strong>{{ pokemon?.name }}</strong></td>
-              </tr>
-              <tr>
-                <td>Point de vie</td>
-                <td><strong>{{ pokemon?.hp }}</strong></td>
-              </tr>
-              <tr>
-                <td>Dégâts</td>
-                <td><strong>{{ pokemon?.cp }}</strong></td>
-              </tr>
-              <tr>
-                <td>Rareté</td>
-                <td><strong [innerHTML]="pokemon?.rarete | pokemonRarete"></strong></td>
-              </tr>
+              <tr><td>Nom</td><td><strong>{{ pokemon.name }}</strong></td></tr>
+              <tr><td>Point de vie</td><td><strong>{{ pokemon.hp }}</strong></td></tr>
+              <tr><td>Dégâts</td><td><strong>{{ pokemon.cp }}</strong></td></tr>
+              <tr><td>Rareté</td><td><strong [innerHTML]="pokemon.rarete | pokemonRarete"></strong></td></tr>
               <tr>
                 <td>Types</td>
                 <td>
-                  @for (type of pokemon?.types; track $index) {
+                  @for (type of pokemon.types; track $index) {
                     <span class="{{ type | pokemonTypeColor }}">{{ type }}</span>
                   }
                 </td>
               </tr>
-              <tr>
-                <td>Date de création</td>
-                <td><strong>{{ pokemon?.created | date: 'dd/MM/yy' }}</strong></td>
-              </tr>
+              <tr><td>Date de création</td><td><strong>{{ pokemon.created | date: 'dd/MM/yy' }}</strong></td></tr>
             </tbody>
           </table>
         </div>
 
-        <div class="card-action" style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+        <div class="card-action"
+          style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
 
-          <div style="display:flex; gap:8px;">
+          <div style="display:flex;gap:8px;">
             @if(pokemon.id > 1){
-              <a href="/pokemon/{{pokemon.id-1}}" class="btn waves-effect waves-light white black-text">
+              <a href="/pokemon/{{pokemon.id - 1}}" class="btn waves-effect waves-light white black-text">
                 <i class="material-icons left">chevron_left</i> Précédent
               </a>
             }
-            @if(pokemon.id+1 <= pokemonsSize){
-              <a href="/pokemon/{{pokemon.id+1}}" class="btn waves-effect waves-light white black-text">
+            @if(pokemon.id + 1 <= pokemonsSize){
+              <a href="/pokemon/{{pokemon.id + 1}}" class="btn waves-effect waves-light white black-text">
                 Suivant <i class="material-icons right">chevron_right</i>
               </a>
             }
           </div>
 
-          <div style="display:flex; gap:8px;">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button (click)="train()" class="btn waves-effect waves-light green darken-2">
+              <i class="material-icons left">fitness_center</i> Entraîner
+            </button>
+            @if (nextEvolution) {
+              <button (click)="evolve()" [disabled]="isEvolving"
+                class="btn waves-effect waves-light purple darken-2">
+                <i class="material-icons left">auto_awesome</i> → {{ nextEvolution }}
+              </button>
+            }
             <a (click)="goBack()" class="btn waves-effect waves-light grey">
               <i class="material-icons left">arrow_back</i> Retour
             </a>
@@ -75,7 +107,7 @@
 
         </div>
       </div>
-
     </div>
+
   </div>
 </div>

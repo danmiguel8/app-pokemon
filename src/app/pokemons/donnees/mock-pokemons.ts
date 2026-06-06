@@ -10,7 +10,9 @@ export const POKEMONS: Pokemon[] = [
         types: ["Plante", "Poison"],
         created: new Date(),
         rarete : "**",
-        isFavorite: false
+        isFavorite: false,
+        level : 1,
+        xp : 0
     },
     {
         id: 2,
@@ -21,7 +23,9 @@ export const POKEMONS: Pokemon[] = [
         types: ["Feu"],
         created: new Date(),
         rarete : "***",
-        isFavorite: false
+        isFavorite: false,
+        level : 1,
+        xp : 0
     },
     {
         id: 3,
@@ -32,7 +36,9 @@ export const POKEMONS: Pokemon[] = [
         types: ["Eau"],
         created: new Date(),
         rarete : "*",
-        isFavorite: false
+        isFavorite: false,
+        level : 1,
+        xp : 0
     },
     {
         id: 4,
@@ -43,7 +49,9 @@ export const POKEMONS: Pokemon[] = [
         types: ["Insecte", "Poison"],
         created: new Date(),
         rarete : "*",
-        isFavorite: false
+        isFavorite: false,
+        level : 1,
+        xp : 0
     },
     {
         id: 5,
@@ -54,7 +62,9 @@ export const POKEMONS: Pokemon[] = [
         types: ["Normal", "Vol"],
         created: new Date(),
         rarete : "***",
-        isFavorite: false
+        isFavorite: false,
+        level : 1,
+        xp : 0
     },
     {
         id: 6,
@@ -65,7 +75,9 @@ export const POKEMONS: Pokemon[] = [
         types: ["Normal"],
         created: new Date(),
         rarete : "*",
-        isFavorite: false
+        isFavorite: false,
+        level : 1,
+        xp : 0
     },
     {
         id: 7,
@@ -76,7 +88,9 @@ export const POKEMONS: Pokemon[] = [
         types: ["Normal", "Vol"],
         created: new Date(),
         rarete : "*",
-        isFavorite: false
+        isFavorite: false,
+        level : 1,
+        xp : 0
     },
     {
         id: 8,
@@ -87,7 +101,9 @@ export const POKEMONS: Pokemon[] = [
         types: ["Poison"],
         created: new Date(),
         rarete : "****",
-        isFavorite: false
+        isFavorite: false,
+        level : 1,
+        xp : 0
     },
     {
         id: 9,
@@ -98,7 +114,9 @@ export const POKEMONS: Pokemon[] = [
         types: ["Electrik"],
         created: new Date(),
         rarete : "***",
-        isFavorite: false
+        isFavorite: false,
+        level : 1,
+        xp : 0
     },
     {
         id: 10,
@@ -109,7 +127,9 @@ export const POKEMONS: Pokemon[] = [
         types: ["Normal"],
         created: new Date(),
         rarete : "*****",
-        isFavorite: false
+        isFavorite: false,
+        level : 1,
+        xp : 0
     },
     {
         id: 11,
@@ -120,7 +140,9 @@ export const POKEMONS: Pokemon[] = [
         types: ["Fée"],
         created: new Date(),
         rarete : "***",
-        isFavorite: false
+        isFavorite: false,
+        level : 1,
+        xp : 0
     },
     {
         id: 12,
@@ -131,6 +153,8 @@ export const POKEMONS: Pokemon[] = [
         types: ["Feu"],
         created: new Date(),
         rarete : "*****",
-        isFavorite: false
+        isFavorite: false,
+        level : 1,
+        xp : 0
     }
 ];

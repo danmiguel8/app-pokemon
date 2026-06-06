@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Pokemon } from '../donnees/pokemon';
-import { POKEMONS } from '../donnees/mock-pokemons';
 import { DatePipe } from '@angular/common';
 import { PokemonTypeColorPipe } from '../pipes/pokemon-type-color.pipe';
 import { BorderCardDirective } from '../directives/border-card.directive';
@@ -11,12 +10,14 @@ import { PokemonComparateurComponent } from "../comparateur-pokemon/comparateur-
 import { NavComponent } from "../../nav.component";
 import { AuthService } from '../../auth.service';
 import { LogoutComponent } from "../../logout/logout.component";
+import { fadeSlideIn, listStagger } from '../../animation';
 
 @Component({
   standalone: true,
   selector: 'list-pokemons',
   templateUrl: './pokemons.component.html',
-  imports: [DatePipe, PokemonTypeColorPipe, BorderCardDirective, SearchPokemonsComponent, PokemonComparateurComponent, NavComponent, LogoutComponent]
+  imports: [DatePipe, PokemonTypeColorPipe, BorderCardDirective, SearchPokemonsComponent, PokemonComparateurComponent, NavComponent, LogoutComponent],
+  animations: [fadeSlideIn, listStagger]
 })
 export class PokemonsComponent implements OnInit {
 

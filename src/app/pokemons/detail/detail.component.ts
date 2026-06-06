@@ -1,46 +1,99 @@
 import { Component, OnInit } from '@angular/core';
-import { POKEMONS } from '../donnees/mock-pokemons';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Pokemon } from '../donnees/pokemon';
-import { PokemonTypeColorPipe } from '../pipes/pokemon-type-color.pipe';
-import { DatePipe } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PokemonsService } from '../pokemons.service';
+import { getEvolutionChain, getEvolutionStage, getNextEvolution } from '../donnees/evolutions.config';
+import { fadeSlideIn, cardFlipIn, rowFadeIn, evolutionAnim, xpBarAnim } from '../../animation';
+import { DatePipe } from '@angular/common';
+import { PokemonTypeColorPipe } from '../pipes/pokemon-type-color.pipe';
 import { PokemonRaretePipe } from '../pipes/pokemon-rarete.pipe';
-import { NavComponent } from "../../nav.component";
+import { NavComponent } from '../../nav.component';
 
 @Component({
   standalone: true,
   selector: 'app-detail',
   templateUrl: './detail.component.html',
-  imports: [DatePipe, PokemonTypeColorPipe, PokemonRaretePipe, NavComponent]
+  imports: [DatePipe, PokemonTypeColorPipe, PokemonRaretePipe, NavComponent],
+  animations: [fadeSlideIn, cardFlipIn, rowFadeIn, evolutionAnim, xpBarAnim]
 })
 export class DetailComponent implements OnInit {
+  pokemon!: Pokemon;
+  pokemonsSize: number = 0;
+  allPokemons: Pokemon[] = [];
+  evolutionChain: string[] = [];
+  currentStage: number = 0;
+  nextEvolution: string | null = null;
+  isEvolving: boolean = false;
+  levelUpMessage: string = '';
 
-  deletePokemon(pokemon: any) {
-    this.pokemonsService.deletePokemon(pokemon).subscribe( () =>
-      this.router.navigate(['pokemon/all'])
-    );
-  }
-
-  constructor(private route: ActivatedRoute, private router: Router,
-              private pokemonsService : PokemonsService
-              ){
-  }
-  pokemon: any = null;
-  pokemonsSize: any = POKEMONS.length;
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private pokemonsService: PokemonsService
+  ) {}
 
   ngOnInit(): void {
-    let id = this.route.snapshot.params['id'];
-    this.pokemonsService.getPokemon(id).subscribe((pokemon) => this.pokemon = pokemon);
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+
+    this.pokemonsService.getPokemon(id).subscribe(pokemon => {
+      this.pokemon = pokemon;
+      this.refreshEvolution();
+    });
+
+    this.pokemonsService.getPokemons().subscribe(pokemons => {
+      this.allPokemons = pokemons;
+      this.pokemonsSize = pokemons.length;
+    });
   }
 
-  goBack(){
-    this.router.navigate(['/']);
+  refreshEvolution(): void {
+    this.evolutionChain = getEvolutionChain(this.pokemon.name) ?? [];
+    this.currentStage = getEvolutionStage(this.pokemon.name);
+    this.nextEvolution = getNextEvolution(this.pokemon.name);
   }
 
-  selectPokemonToEdit(pokemon: Pokemon) {
-    let link = ['pokemon/edit', pokemon.id];
-    this.router.navigate(link);
+  get xpPercent(): number {
+    const required = this.pokemon.level * 100;
+    return Math.min(Math.round((this.pokemon.xp / required) * 100), 100);
   }
 
+  get xpRequired(): number {
+    return this.pokemon.level * 100;
+  }
+
+  train(): void {
+    this.levelUpMessage = '';
+    const prevLevel = this.pokemon.level;
+    this.pokemonsService.trainPokemon(this.pokemon).subscribe(updated => {
+      this.pokemon = updated;
+      this.refreshEvolution();
+      if (updated.level > prevLevel) {
+        this.levelUpMessage = `Niveau ${updated.level} atteint ! +10 PV, +5 Dégâts`;
+        setTimeout(() => this.levelUpMessage = '', 3000);
+      }
+    });
+  }
+
+  evolve(): void {
+    this.isEvolving = true;
+    const obs = this.pokemonsService.evolvePokemon(this.pokemon, this.allPokemons);
+    if (!obs) { this.isEvolving = false; return; }
+    obs.subscribe(updated => {
+      this.pokemon = updated;
+      this.refreshEvolution();
+      this.isEvolving = false;
+    });
+  }
+
+  goBack(): void { this.router.navigate(['/pokemon/all']); }
+
+  selectPokemonToEdit(pokemon: Pokemon): void {
+    this.router.navigate(['/pokemon/edit', pokemon.id]);
+  }
+
+  deletePokemon(pokemon: Pokemon): void {
+    this.pokemonsService.deletePokemon(pokemon).subscribe(() =>
+      this.router.navigate(['/pokemon/all'])
+    );
+  }
 }
